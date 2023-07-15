@@ -11,6 +11,23 @@ const userDetails = JSON.parse(
 app.use(express.json());
 
 //Write DELETE endpoint for deleting the details of user
+app.delete("/api/v1/details/:id", (req, res) => {
+  const deleteId = req.params.deleteId;
+  const deleteDetails = userDetails.find((del) => del.id === deleteId);
+  if(deleteDetails){
+    res.status(200).json({
+      status: "success",
+      message: "User details deleted successfully",
+      data: userDetails.deleteId,
+    })
+  }else{
+    res.status(404).json({
+      status: "failed",
+      message: "User not found!"
+    })
+  }
+
+});
 
 // PATCH endpoint for editing user details
 app.patch("/api/v1/details/:id", (req, res) => {
