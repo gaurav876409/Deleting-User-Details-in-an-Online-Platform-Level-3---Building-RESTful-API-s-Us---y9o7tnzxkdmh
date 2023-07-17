@@ -12,24 +12,38 @@ app.use(express.json());
 
 //Write DELETE endpoint for deleting the details of user
 app.delete("/api/v1/details/:id", (req, res) => {
-  const deleteId = req.params.deleteId;
-  const deleteDetails = userDetails.find((del) => del.id === deleteId);
-  if(deleteDetails){
+  const deleteId = parseInt(req.params.id, 10); // Parse the deleteId to an integer
+  console.log("Delete ID:", deleteId);
+
+  // Check if the userDetails array is properly populated with user details
+  console.log("userDetails:", userDetails);
+
+  const deleteIndex = userDetails.findIndex((user) => user.id === deleteId);
+  console.log("Delete Index:", deleteIndex);
+
+  if (deleteIndex === -1) {
+    res.status(404).json({
+      status: "failed",
+      message: "User not found!",
+    });
+  } else {
+    // Get the user details before deleting
+    const deletedUser = userDetails[deleteIndex];
+    // Remove the user with the specified ID from the userDetails array
+    userDetails.splice(deleteIndex, 1);
     res.status(200).json({
       status: "success",
       message: "User details deleted successfully",
-      data: userDetails.deleteId,
-    })
-  }else{
-    res.status(404).json({
-      status: "failed",
-      message: "User not found!"
-    })
+      data: {
+        details: deletedUser,
+      },
+    });
   }
-
 });
 
 // PATCH endpoint for editing user details
+
+
 app.patch("/api/v1/details/:id", (req, res) => {
   const id = req.params.id * 1;
   const updatedDetails = userDetails.find(
